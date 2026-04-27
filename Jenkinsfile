@@ -36,7 +36,7 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 echo '>>> [3/5] Execution des tests unitaires Angular...'
-                sh 'npm test -- --run || true'
+                sh 'npm test -- --watch=false --browsers=ChromeHeadless || true'
                 echo '>>> Tests unitaires termines.'
             }
         }
