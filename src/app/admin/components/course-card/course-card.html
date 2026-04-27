@@ -1,0 +1,27 @@
+<div class="course-card">
+    <div class="course-info">
+        <div class="icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="course-icon" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+            </svg>
+        </div>
+        <div class="details">
+            <h3>{{ course.title }}</h3>
+            <p>{{ course.subtitle }}</p>
+        </div>
+    </div>
+
+    <div class="progress-section">
+        <div class="progress-info">
+            <span class="label">Progress</span>
+            <span class="percentage">{{ course.progress }}%</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" [style.width]="course.progress + '%'"></div>
+        </div>
+    </div>
+
+    <button class="view-btn">View</button>
+</div>

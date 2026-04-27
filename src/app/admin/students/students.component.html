@@ -1,0 +1,272 @@
+<div class="layout">
+    <app-sidebar></app-sidebar>
+
+    <main class="main-content">
+        <div class="page-wrapper">
+
+            <!-- Header -->
+            <div class="page-header">
+                <div class="header-left">
+                    <h1>Students Management</h1>
+                    <p class="subtitle">Manage and track all enrolled students</p>
+                </div>
+                <div class="header-right">
+                    <div class="stats-pill">
+                        <span class="stats-dot"></span>
+                        {{ totalElements }} student{{ totalElements !== 1 ? 's' : '' }}
+                    </div>
+                    <button class="btn-add" (click)="openAddModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add Student
+                    </button>
+                </div>
+            </div>
+
+            <!-- Success toast -->
+            <div class="toast success-toast" *ngIf="successMessage">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                {{ successMessage }}
+            </div>
+
+            <!-- Error banner -->
+            <div class="error-banner" *ngIf="loadError && !loading">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                {{ loadError }}
+                <button class="retry-btn" (click)="loadStudentsPaged()">↺ Retry</button>
+            </div>
+
+            <!-- Search bar -->
+            <div class="search-bar" *ngIf="!loading && !loadError">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" placeholder="Search by name, email or level…"
+                    [(ngModel)]="searchQuery" (ngModelChange)="applyFilter()" />
+                <button class="clear-search" *ngIf="searchQuery" (click)="searchQuery=''; applyFilter()">✕</button>
+            </div>
+
+            <!-- Table card -->
+            <div class="table-card">
+
+                <!-- Loading skeleton -->
+                <div class="skeleton-wrapper" *ngIf="loading">
+                    <div class="skeleton-row" *ngFor="let i of [1,2,3,4,5]">
+                        <div class="skeleton-avatar"></div>
+                        <div class="skeleton-lines">
+                            <div class="skeleton-line wide"></div>
+                            <div class="skeleton-line narrow"></div>
+                        </div>
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-actions">
+                            <div class="skeleton-btn"></div>
+                            <div class="skeleton-btn"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <table class="students-table" *ngIf="!loading && !loadError">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Email</th>
+                            <th class="center-th">Level</th>
+                            <th class="right-th">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let student of filteredStudents; trackBy: trackById" class="student-row">
+                            <td>
+                                <div class="student-cell">
+                                    <div class="avatar" [style.background]="getAvatarColor(student.fullName)">
+                                        {{ getInitials(student.fullName) }}
+                                    </div>
+                                    <div class="student-info">
+                                        <span class="student-name">{{ student.fullName }}</span>
+                                        <span class="student-id">#{{ student.id }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="email-text">{{ student.email }}</span></td>
+                            <td class="center-td">
+                                <span class="level-badge" [class]="getLevelClass(student.level)">
+                                    {{ student.level }}
+                                </span>
+                            </td>
+                            <td class="right-td">
+                                <button class="btn-icon edit" (click)="openEditModal(student)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                    </svg>
+                                    Edit
+                                </button>
+                                <button class="btn-icon delete" (click)="deleteStudent(student.id)">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path
+                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                        </path>
+                                    </svg>
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- No search results -->
+                        <tr *ngIf="filteredStudents.length === 0 && searchQuery">
+                            <td colspan="4" class="empty-state">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d1d5db"
+                                    stroke-width="1.5">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                <p>No match for "<strong>{{ searchQuery }}</strong>"</p>
+                            </td>
+                        </tr>
+
+                        <!-- No students at all -->
+                        <tr *ngIf="students.length === 0 && !searchQuery">
+                            <td colspan="4" class="empty-state">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db"
+                                    stroke-width="1">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                <p>No students yet.</p>
+                                <button class="btn-empty-add" (click)="openAddModal()">+ Add first student</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination bar -->
+            <div class="pagination-bar" *ngIf="!loading && !loadError && totalElements > 0">
+
+                <!-- Info text -->
+                <span class="pagination-info">
+                    Showing {{ currentPage * pageSize + 1 }}–{{ isLastPage ? totalElements : (currentPage + 1) * pageSize }}
+                    of {{ totalElements }} students
+                </span>
+
+                <!-- Page buttons -->
+                <div class="pagination-pages">
+                    <button class="page-btn"
+                            (click)="previousPage()"
+                            [disabled]="currentPage === 0"
+                            [class.disabled]="currentPage === 0">
+                        ← Prev
+                    </button>
+
+                    <ng-container *ngFor="let p of [].constructor(totalPages); let i = index">
+                        <button class="page-btn page-number"
+                                (click)="goToPage(i)"
+                                [class.active]="i === currentPage">
+                            {{ i + 1 }}
+                        </button>
+                    </ng-container>
+
+                    <button class="page-btn"
+                            (click)="nextPage()"
+                            [disabled]="isLastPage"
+                            [class.disabled]="isLastPage">
+                        Next →
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- ===== MODAL ===== -->
+<div class="modal-backdrop" *ngIf="showAddModal" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+            <div class="modal-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <div>
+                <h3>{{ isEditMode ? 'Edit Student' : 'Add New Student' }}</h3>
+                <p>{{ isEditMode ? 'Update student information' : 'Fill in the details below' }}</p>
+            </div>
+            <button class="modal-close" (click)="closeModal()">✕</button>
+        </div>
+
+        <div class="modal-error" *ngIf="errorMessage">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            {{ errorMessage }}
+        </div>
+
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" [(ngModel)]="form.fullName" placeholder="e.g. John Doe" />
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" [(ngModel)]="form.email" placeholder="e.g. john@school.edu" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>
+                        Password
+                        <span class="label-hint" *ngIf="isEditMode">(leave empty to keep current)</span>
+                    </label>
+                    <input type="password" [(ngModel)]="form.password"
+                        [placeholder]="isEditMode ? '••••••••' : 'Min. 6 characters'" />
+                </div>
+                <div class="form-group">
+                    <label>Academic Level</label>
+                    <select [(ngModel)]="form.level">
+                        <option value="" disabled>Select level</option>
+                        <option value="1st year">1st Year</option>
+                        <option value="2nd year">2nd Year</option>
+                        <option value="3rd year">3rd Year</option>
+                        <option value="4th year">4th Year</option>
+                        <option value="5th year">5th Year</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancel" (click)="closeModal()" [disabled]="saving">Cancel</button>
+            <button class="btn-save" (click)="submit()"
+                [disabled]="saving || !form.fullName || !form.email || !form.level || (!isEditMode && !form.password)">
+                <span *ngIf="saving" class="btn-spinner"></span>
+                {{ saving ? (isEditMode ? 'Saving…' : 'Adding…') : (isEditMode ? 'Save Changes' : 'Add Student') }}
+            </button>
+        </div>
+    </div>
+</div>

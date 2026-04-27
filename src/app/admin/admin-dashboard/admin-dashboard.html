@@ -1,0 +1,179 @@
+<!-- WRAPPER -->
+<div style="display:flex; min-height:100vh; background:#f8f7ff;">
+
+  <!-- SIDEBAR -->
+  <app-sidebar></app-sidebar>
+
+  <!-- MAIN CONTENT -->
+  <div style="flex:1; padding:32px; overflow-y:auto;">
+
+    <!-- HEADER BANNER -->
+    <div style="background:linear-gradient(135deg, #7c3aed, #5b21b6);
+                border-radius:16px; padding:32px; margin-bottom:24px;
+                color:white;">
+      <p style="font-size:13px; opacity:0.8; margin:0 0 8px;">
+        {{ today | date:'EEEE, MMMM d, y' }}
+      </p>
+      <h1 style="font-size:28px; font-weight:700; margin:0 0 8px;">
+        Welcome to MySchool 🎓
+      </h1>
+      <p style="font-size:14px; opacity:0.8; margin:0;">
+        Manage your students, courses and enrollments
+      </p>
+    </div>
+
+    <!-- 3 STAT CARDS -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr);
+                gap:16px; margin-bottom:32px;">
+
+      <!-- Total Students -->
+      <div style="background:white; border-radius:12px;
+                  padding:24px; border:0.5px solid #e5e7eb;">
+        <div style="display:flex; align-items:center;
+                    justify-content:space-between; margin-bottom:12px;">
+          <span style="font-size:13px; color:#6b7280;">Total Students</span>
+          <div style="width:40px; height:40px; border-radius:10px;
+                      background:#ede9fe; display:flex;
+                      align-items:center; justify-content:center;
+                      font-size:18px;">👨‍🎓</div>
+        </div>
+        <div style="font-size:32px; font-weight:700; color:#7c3aed;">
+          {{ loadingStats ? '...' : totalStudents }}
+        </div>
+        <div style="font-size:12px; color:#6b7280; margin-top:4px;">
+          Registered students
+        </div>
+      </div>
+
+      <!-- Total Courses -->
+      <div style="background:white; border-radius:12px;
+                  padding:24px; border:0.5px solid #e5e7eb;">
+        <div style="display:flex; align-items:center;
+                    justify-content:space-between; margin-bottom:12px;">
+          <span style="font-size:13px; color:#6b7280;">Total Courses</span>
+          <div style="width:40px; height:40px; border-radius:10px;
+                      background:#dbeafe; display:flex;
+                      align-items:center; justify-content:center;
+                      font-size:18px;">📚</div>
+        </div>
+        <div style="font-size:32px; font-weight:700; color:#1d4ed8;">
+          {{ loadingStats ? '...' : totalCourses }}
+        </div>
+        <div style="font-size:12px; color:#6b7280; margin-top:4px;">
+          Available courses
+        </div>
+      </div>
+
+      <!-- Total Enrollments -->
+      <div style="background:white; border-radius:12px;
+                  padding:24px; border:0.5px solid #e5e7eb;">
+        <div style="display:flex; align-items:center;
+                    justify-content:space-between; margin-bottom:12px;">
+          <span style="font-size:13px; color:#6b7280;">Total Enrollments</span>
+          <div style="width:40px; height:40px; border-radius:10px;
+                      background:#d1fae5; display:flex;
+                      align-items:center; justify-content:center;
+                      font-size:18px;">✅</div>
+        </div>
+        <div style="font-size:32px; font-weight:700; color:#065f46;">
+          {{ loadingStats ? '...' : totalEnrollments }}
+        </div>
+        <div style="font-size:12px; color:#6b7280; margin-top:4px;">
+          Active enrollments
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COURSE ENROLLMENT SECTION -->
+    <div style="background:white; border-radius:16px;
+                padding:24px; border:0.5px solid #e5e7eb;">
+
+      <div style="display:flex; align-items:center;
+                  justify-content:space-between; margin-bottom:20px;">
+        <div>
+          <h2 style="font-size:18px; font-weight:600;
+                     color:#1f2937; margin:0 0 4px;">
+            Course Enrollment
+          </h2>
+          <p style="font-size:13px; color:#6b7280; margin:0;">
+            Enroll students into available courses
+          </p>
+        </div>
+        <span style="background:#ede9fe; color:#7c3aed;
+                     padding:4px 12px; border-radius:20px;
+                     font-size:12px; font-weight:500;">
+          {{ apiCourses.length }} courses
+        </span>
+      </div>
+
+      <!-- Loading state -->
+      <div *ngIf="loadingCourses"
+           style="text-align:center; padding:40px; color:#6b7280;">
+        Loading courses...
+      </div>
+
+      <!-- Course list -->
+      <div *ngIf="!loadingCourses">
+        <div *ngFor="let course of apiCourses"
+             style="display:flex; align-items:center; justify-content:space-between;
+                    padding:16px; border:0.5px solid #f3f4f6;
+                    border-radius:12px; margin-bottom:12px;">
+
+          <!-- Course info -->
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:44px; height:44px; background:#ede9fe;
+                        border-radius:10px; display:flex;
+                        align-items:center; justify-content:center;
+                        font-size:20px;">🎓</div>
+            <div>
+              <div style="font-weight:600; color:#1f2937; font-size:14px;">
+                {{ course.title }}
+              </div>
+              <div style="font-size:12px; color:#6b7280;">
+                {{ course.dateTime | date:'MMM d, y' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Enrollment controls -->
+          <div style="display:flex; align-items:center; gap:10px;">
+            <select [(ngModel)]="enrollmentState[course.id].selectedStudentId"
+                    style="padding:8px 12px; border-radius:8px;
+                           border:1px solid #e5e7eb; font-size:13px;
+                           min-width:200px; color:#374151;">
+              <option [ngValue]="null">Select student</option>
+              <option *ngFor="let s of students" [ngValue]="s.id">
+                {{ s.fullName }}
+              </option>
+            </select>
+
+            <button (click)="enrollStudent(course.id)"
+                    [disabled]="!enrollmentState[course.id].selectedStudentId
+                                || enrollmentState[course.id].loading"
+                    style="padding:8px 20px; background:#7c3aed;
+                           color:white; border:none; border-radius:8px;
+                           font-size:13px; cursor:pointer; font-weight:500;
+                           opacity:1; transition:opacity 0.2s;"
+                    [style.opacity]="!enrollmentState[course.id].selectedStudentId ? '0.5' : '1'">
+              {{ enrollmentState[course.id].loading ? 'Enrolling...' : 'Enroll' }}
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Success/Error messages -->
+        <div *ngFor="let course of apiCourses">
+          <div *ngIf="enrollmentState[course.id].message"
+               [style.color]="enrollmentState[course.id].error ? '#dc2626' : '#059669'"
+               style="font-size:12px; padding:4px 8px; margin-top:-8px;
+                      margin-bottom:8px;">
+            {{ enrollmentState[course.id].message }}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,59 @@
+.stat-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+    flex: 1;
+
+    .icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f3e8ff;
+        color: #7c3aed;
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+
+        .title {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .amount {
+            color: #1f2937;
+            font-size: 20px;
+            font-weight: 700;
+        }
+    }
+
+    &.active {
+        background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+        color: white;
+
+        .icon-wrapper {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .info {
+            .title {
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            .amount {
+                color: white;
+            }
+        }
+    }
+}

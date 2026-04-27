@@ -1,0 +1,162 @@
+<div class="register-page" [@fadeInOut]>
+  <div class="register-page__overlay"></div>
+
+  <div class="register-card">
+    <!-- Logo -->
+    <div class="register-card__logo">
+      <img src="/images/logo.png" alt="Logo" class="register-card__logo-img" />
+    </div>
+
+    <!-- Title -->
+    <h1 class="register-card__title">EDUCAVO SCHOOL</h1>
+
+    <!-- Subtitle -->
+    <p class="register-card__subtitle">Create Account</p>
+
+    <!-- Progress Steps Indicator -->
+    <div class="register-card__steps">
+      <div class="register-card__step" [class.register-card__step--active]="currentStep === 1"
+        [class.register-card__step--completed]="currentStep > 1">
+        <div class="register-card__step-number">1</div>
+        <span class="register-card__step-label">Personal</span>
+      </div>
+      <div class="register-card__step-line" [class.register-card__step-line--active]="currentStep > 1"></div>
+      <div class="register-card__step" [class.register-card__step--active]="currentStep === 2"
+        [class.register-card__step--completed]="currentStep > 2">
+        <div class="register-card__step-number">2</div>
+        <span class="register-card__step-label">Email</span>
+      </div>
+      <div class="register-card__step-line" [class.register-card__step-line--active]="currentStep > 2"></div>
+      <div class="register-card__step" [class.register-card__step--active]="currentStep === 3"
+        [class.register-card__step--completed]="currentStep > 3">
+        <div class="register-card__step-number">3</div>
+        <span class="register-card__step-label">Password</span>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-card__form">
+
+      <!-- Step 1: Personal Information -->
+      <div class="register-card__step-content" [@slideStep]="currentStep" *ngIf="currentStep === 1">
+        <h3 class="register-card__step-title">Personal Information</h3>
+
+        <!-- First Name -->
+        <div class="register-card__field">
+          <input type="text" id="firstName" formControlName="firstName" placeholder="First Name"
+            class="register-card__input"
+            [class.register-card__input--error]="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched" />
+          <div class="register-card__error"
+            *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched">
+            <span *ngIf="registerForm.get('firstName')?.errors?.['required']">First name is required</span>
+            <span *ngIf="registerForm.get('firstName')?.errors?.['minlength']">First name must be at least 2
+              characters</span>
+          </div>
+        </div>
+
+        <!-- Last Name -->
+        <div class="register-card__field">
+          <input type="text" id="lastName" formControlName="lastName" placeholder="Last Name"
+            class="register-card__input"
+            [class.register-card__input--error]="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched" />
+          <div class="register-card__error"
+            *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched">
+            <span *ngIf="registerForm.get('lastName')?.errors?.['required']">Last name is required</span>
+            <span *ngIf="registerForm.get('lastName')?.errors?.['minlength']">Last name must be at least 2
+              characters</span>
+          </div>
+        </div>
+
+        <!-- Level -->
+        <div class="register-card__field">
+          <input type="text" id="level" formControlName="level" placeholder="Academic Level (e.g. 1st Year)"
+            class="register-card__input"
+            [class.register-card__input--error]="registerForm.get('level')?.invalid && registerForm.get('level')?.touched" />
+          <div class="register-card__error"
+            *ngIf="registerForm.get('level')?.invalid && registerForm.get('level')?.touched">
+            Level is required
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Email -->
+      <div class="register-card__step-content" [@slideStep]="currentStep" *ngIf="currentStep === 2">
+        <h3 class="register-card__step-title">Email Address</h3>
+
+        <!-- Email Field -->
+        <div class="register-card__field">
+          <input type="email" id="email" formControlName="email" placeholder="Email" class="register-card__input"
+            [class.register-card__input--error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" />
+          <div class="register-card__error"
+            *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+            <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
+            <span *ngIf="registerForm.get('email')?.errors?.['email']">Invalid email format</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Password -->
+      <div class="register-card__step-content" [@slideStep]="currentStep" *ngIf="currentStep === 3">
+        <h3 class="register-card__step-title">Create Password</h3>
+
+        <!-- Password Field -->
+        <div class="register-card__field">
+          <input type="password" id="password" formControlName="password" placeholder="Password"
+            class="register-card__input"
+            [class.register-card__input--error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" />
+          <div class="register-card__error"
+            *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+            <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
+            <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6
+              characters</span>
+          </div>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="register-card__field">
+          <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm Password"
+            class="register-card__input"
+            [class.register-card__input--error]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched" />
+          <div class="register-card__error"
+            *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+            <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Please confirm your password</span>
+            <span *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords do not
+              match</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="register-card__navigation">
+        <button type="button" class="register-card__button register-card__button--secondary" (click)="previousStep()"
+          *ngIf="currentStep > 1">
+          Previous
+        </button>
+
+        <button type="button" class="register-card__button" (click)="nextStep()" *ngIf="currentStep < totalSteps">
+          Next
+        </button>
+
+        <button type="submit" class="register-card__button" *ngIf="currentStep === totalSteps"
+          [disabled]="registerForm.invalid">
+          Sign up
+        </button>
+      </div>
+
+      <!-- Messages -->
+      <div *ngIf="successMessage"
+        style="color: green; margin-top: 15px; text-align: center; font-weight: bold; background: #e6ffed; padding: 10px; border-radius: 8px; border: 1px solid #c2e0cd;">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="apiError" class="register-card__error register-card__error--api">
+        {{ apiError }}
+      </div>
+
+      <!-- Link to Login -->
+      <div class="register-card__link-container">
+        <span class="register-card__link-text">Already have an account?</span>
+        <a routerLink="/login" class="register-card__link">Sign in</a>
+      </div>
+    </form>
+  </div>
+</div>

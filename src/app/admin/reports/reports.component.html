@@ -1,0 +1,206 @@
+<div class="layout">
+    <app-sidebar></app-sidebar>
+
+    <main class="main-content">
+        <div class="page-wrapper">
+
+            <!-- Header -->
+            <div class="page-header">
+                <div class="header-left">
+                    <h1>Reports & Statistics</h1>
+                    <p class="subtitle">Analytics and activity overview of the platform</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-export excel" (click)="downloadExcel()" [disabled]="exportingExcel || loading">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                        <span *ngIf="!exportingExcel">Export Excel</span>
+                        <span *ngIf="exportingExcel">Generating…</span>
+                    </button>
+                    <button class="btn-export pdf" (click)="downloadPdf()" [disabled]="exportingPdf || loading">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                        </svg>
+                        <span *ngIf="!exportingPdf">Export PDF</span>
+                        <span *ngIf="exportingPdf">Generating…</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Error -->
+            <div class="error-banner" *ngIf="loadError && !loading">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                {{ loadError }}
+                <button class="retry-btn" (click)="loadAll()">↺ Retry</button>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading-state" *ngIf="loading">
+                <div class="spinner-lg"></div>
+                <p>Loading report data…</p>
+            </div>
+
+            <div *ngIf="!loading && !loadError">
+
+                <!-- ── KPI Cards ── -->
+                <div class="kpi-grid" *ngIf="stats">
+                    <div class="kpi-card purple">
+                        <div class="kpi-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div class="kpi-data">
+                            <span class="kpi-value">{{ stats.totalStudents }}</span>
+                            <span class="kpi-label">Total Students</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card blue">
+                        <div class="kpi-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                            </svg>
+                        </div>
+                        <div class="kpi-data">
+                            <span class="kpi-value">{{ stats.totalCourses }}</span>
+                            <span class="kpi-label">Total Courses</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card green">
+                        <div class="kpi-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                        </div>
+                        <div class="kpi-data">
+                            <span class="kpi-value">{{ stats.totalEnrollments }}</span>
+                            <span class="kpi-label">Total Enrollments</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card orange">
+                        <div class="kpi-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6"  y1="20" x2="6"  y2="14"></line>
+                            </svg>
+                        </div>
+                        <div class="kpi-data">
+                            <span class="kpi-value">{{ stats.averageEnrollmentsPerCourse | number:'1.1-1' }}</span>
+                            <span class="kpi-label">Avg. per Course</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Most popular course ── -->
+                <div class="popular-card" *ngIf="stats && stats.mostPopularCourseId > 0">
+                    <div class="popular-badge">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
+                        Most Popular Course
+                    </div>
+                    <h3>{{ stats.mostPopularCourseTitle }}</h3>
+                    <span class="popular-count">{{ stats.mostPopularCourseEnrollments }} students enrolled</span>
+                </div>
+
+                <!-- ── Two-column grid ── -->
+                <div class="content-grid">
+
+                    <!-- Course Stats -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Enrollments per Course</h2>
+                            <span class="badge">{{ courseStats.length }} courses</span>
+                        </div>
+                        <div class="empty-msg" *ngIf="courseStats.length === 0">No courses found.</div>
+                        <div class="course-bars" *ngIf="courseStats.length > 0">
+                            <div class="course-bar-item" *ngFor="let cs of courseStats">
+                                <div class="course-bar-info">
+                                    <span class="course-bar-title">{{ cs.courseTitle }}</span>
+                                    <span class="course-bar-count">{{ cs.enrolledCount }} students</span>
+                                </div>
+                                <div class="bar-track">
+                                    <div class="bar-fill" [style.width]="getBarWidth(cs.enrolledCount)"></div>
+                                </div>
+                                <div class="fill-rate-badge">{{ cs.fillRate }}%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Students table -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Student Overview</h2>
+                            <span class="badge">{{ studentReport.length }} students</span>
+                        </div>
+                        <div class="empty-msg" *ngIf="studentReport.length === 0">No students found.</div>
+                        <div class="students-mini-table" *ngIf="studentReport.length > 0">
+                            <div class="mini-row header-row">
+                                <span>Name</span>
+                                <span>Level</span>
+                                <span class="center">Courses</span>
+                            </div>
+                            <div class="mini-row" *ngFor="let s of studentReport">
+                                <div class="student-name-cell">
+                                    <div class="mini-avatar" [style.background]="'#7c3aed'">
+                                        {{ s.fullName.charAt(0).toUpperCase() }}
+                                    </div>
+                                    <div>
+                                        <div class="name-text">{{ s.fullName }}</div>
+                                        <div class="email-text">{{ s.email }}</div>
+                                    </div>
+                                </div>
+                                <span>
+                                    <span class="level-pill"
+                                        [style.background]="getLevelColor(s.level)"
+                                        [style.color]="getLevelTextColor(s.level)">
+                                        {{ s.level }}
+                                    </span>
+                                </span>
+                                <span class="center enrolled-count">{{ s.enrolledCourses }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ── Scheduled report info ── -->
+                <div class="scheduler-info">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8"  y1="2" x2="8"  y2="6"></line>
+                        <line x1="3"  y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    Monthly report is automatically generated every <strong>1st of the month at 08:00</strong>
+                    and logged in the server console.
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>

@@ -1,0 +1,63 @@
+<div class="login-page" [@fadeInOut]>
+  <div class="login-page__overlay"></div>
+
+  <div class="login-card">
+    <!-- Logo -->
+    <div class="login-card__logo">
+      <img src="/images/logo.png" alt="Logo" class="login-card__logo-img" />
+    </div>
+
+    <!-- Title -->
+    <h1 class="login-card__title">MY SCHOOL</h1>
+
+    <!-- Subtitle -->
+    <p class="login-card__subtitle">Authentication</p>
+
+    <!-- Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-card__form">
+      <!-- Email Field -->
+      <div class="login-card__field">
+        <input type="text" id="email" formControlName="email" placeholder="Email" class="login-card__input"
+          [class.login-card__input--error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" />
+        <div class="login-card__error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          Email is required
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="login-card__field">
+        <input type="password" id="password" formControlName="password" placeholder="Password" class="login-card__input"
+          [class.login-card__input--error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
+        <div class="login-card__error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          Password is required
+        </div>
+      </div>
+
+      <!-- Remember Me Checkbox -->
+      <div class="login-card__remember">
+        <label class="login-card__checkbox-label">
+          <input type="checkbox" formControlName="rememberMe" class="login-card__checkbox" />
+          <span class="login-card__checkbox-text">Remember me</span>
+        </label>
+      </div>
+
+      <!-- Login Button -->
+      <button type="submit" class="login-card__button" [disabled]="loginForm.invalid">
+        Log in
+      </button>
+
+      <div *ngIf="apiError" class="login-card__error login-card__error--api">
+        {{ apiError }}
+      </div>
+
+      <!-- Forgotten Password Link -->
+      <a href="#" class="login-card__forgot-link">Forgotten password?</a>
+    </form>
+
+    <!-- Link to Register -->
+    <div class="login-card__link-container">
+      <span class="login-card__link-text">Don't have an account?</span>
+      <a routerLink="/register" class="login-card__link">Sign up</a>
+    </div>
+  </div>
+</div>

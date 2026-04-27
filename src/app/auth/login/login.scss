@@ -1,0 +1,236 @@
+.login-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('/images/school-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+
+  &__overlay {
+    inset: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    z-index: 1;
+  }
+}
+
+.login-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 420px;
+  padding: 40px 35px;
+  background:  rgba(20, 20, 20, 0.75);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  margin: 0 20px;
+
+  &__logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    &-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #ff6a2a;
+      padding: 20px;
+      object-fit: contain;
+    }
+  }
+
+  &__title {
+    font-size: 24px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    color: #ff6a2a;
+    margin: 0 0 8px 0;
+    letter-spacing: 1px;
+  }
+
+  &__subtitle {
+    font-size: 16px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 30px 0;
+    font-weight: 300;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 12px 16px;
+    color: #fff;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s ease;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:focus {
+      border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    &--error {
+      border-color: rgba(255, 77, 77, 0.6);
+    }
+  }
+
+  &__error {
+    color: rgba(255, 77, 77, 0.9);
+    font-size: 12px;
+    margin-top: -4px;
+
+    &--api {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 14px;
+    }
+  }
+
+  &__remember {
+    display: flex;
+    align-items: center;
+  }
+
+  &__checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 8px;
+  }
+
+  &__checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #ff6a2a;
+  }
+
+  &__checkbox-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    user-select: none;
+  }
+
+  &__button {
+    width: 100%;
+    padding: 14px;
+    background-color: #ff6a2a;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+
+    &:hover:not(:disabled) {
+      background-color: #e55a20;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &__forgot-link {
+    color: #4a9eff;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #6bb0ff;
+      text-decoration: underline;
+    }
+  }
+
+  &__link-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  &__link-text {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+  }
+
+  &__link {
+    color: #4a9eff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+      color: #6bb0ff;
+      text-decoration: underline;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 480px) {
+  .login-card {
+    max-width: 90%;
+    padding: 30px 25px;
+    margin: 0 15px;
+
+    &__logo-img {
+      width: 70px;
+      height: 70px;
+      padding: 15px;
+    }
+
+    &__title {
+      font-size: 20px;
+    }
+
+    &__subtitle {
+      font-size: 14px;
+    }
+  }
+}
