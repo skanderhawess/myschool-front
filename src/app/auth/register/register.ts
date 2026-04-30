@@ -21,9 +21,9 @@ export class Register {
   successMessage = '';
 
   constructor(
-    private fb: FormBuilder,
-    private studentService: StudentService,
-    private router: Router
+    private readonly fb: FormBuilder,
+    private readonly studentService: StudentService,
+    private readonly router: Router
   ) {
     this.registerForm = this.fb.group({
       // Étape 1: Informations personnelles

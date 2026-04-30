@@ -8,7 +8,7 @@ import { EnrollmentRequest, EnrollmentResponse } from '../../models/enrollment.m
     providedIn: 'root'
 })
 export class EnrollmentService {
-    private http = inject(HttpClient);
+    private readonly http = inject(HttpClient);
     private apiUrl = `${USER_SERVICE_URL}/enrollments`;
 
     enroll(request: EnrollmentRequest): Observable<EnrollmentResponse> {

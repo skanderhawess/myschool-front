@@ -18,9 +18,9 @@ export class Login {
   apiError = '';
 
   constructor(
-    private fb: FormBuilder,
-    private auth: AuthService,
-    private router: Router
+    private readonly fb: FormBuilder,
+    private readonly auth: AuthService,
+    private readonly router: Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],

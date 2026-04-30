@@ -30,7 +30,7 @@ export interface StudentReport {
 
 @Injectable({ providedIn: 'root' })
 export class ReportService {
-    private http = inject(HttpClient);
+    private readonly http = inject(HttpClient);
     private base = `${USER_SERVICE_URL}/reports`;
 
     getStats(): Observable<DashboardStats> {

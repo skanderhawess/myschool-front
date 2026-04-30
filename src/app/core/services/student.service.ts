@@ -17,7 +17,7 @@ export interface PageResponse<T> {
     providedIn: 'root'
 })
 export class StudentService {
-    private http = inject(HttpClient);
+    private readonly http = inject(HttpClient);
     private apiUrl = `${USER_SERVICE_URL}/students`;
 
     getStudents(): Observable<Student[]> {

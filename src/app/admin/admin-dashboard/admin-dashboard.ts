@@ -31,11 +31,11 @@ interface EnrollmentState {
     styleUrls: ['./admin-dashboard.scss']
 })
 export class AdminDashboardComponent implements OnInit {
-    private courseService = inject(CourseService);
-    private studentService = inject(StudentService);
-    private enrollmentService = inject(EnrollmentService);
-    private reportService = inject(ReportService);
-    private cdr = inject(ChangeDetectorRef);
+    private readonly courseService = inject(CourseService);
+    private readonly studentService = inject(StudentService);
+    private readonly enrollmentService = inject(EnrollmentService);
+    private readonly reportService = inject(ReportService);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     // --- Dashboard stats ---
     today = new Date();

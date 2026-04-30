@@ -15,9 +15,9 @@ import { finalize } from 'rxjs/operators';
     styleUrls: ['./students.component.scss']
 })
 export class StudentsComponent implements OnInit {
-    private studentService = inject(StudentService);
-    private router = inject(Router);
-    private cdr = inject(ChangeDetectorRef);
+    private readonly studentService = inject(StudentService);
+    private readonly router = inject(Router);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     students: Student[] = [];
     filteredStudents: Student[] = [];

@@ -14,8 +14,8 @@ import { catchError } from 'rxjs/operators';
     styleUrls: ['./reports.component.scss']
 })
 export class ReportsComponent implements OnInit {
-    private reportService = inject(ReportService);
-    private cdr = inject(ChangeDetectorRef);
+    private readonly reportService = inject(ReportService);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     stats: DashboardStats | null = null;
     courseStats: CourseStats[] = [];

@@ -15,8 +15,8 @@ import { finalize } from 'rxjs/operators';
     styleUrls: ['./courses.component.scss']
 })
 export class CoursesComponent implements OnInit {
-    private courseService = inject(CourseService);
-    private cdr = inject(ChangeDetectorRef);
+    private readonly courseService = inject(CourseService);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     courses: Course[] = [];
     loading = false;
